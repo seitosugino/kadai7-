@@ -17,7 +17,8 @@
   $('#star').raty({
     starOff:  '<%= asset_path('star-off.png') %>',
     starOn : '<%= asset_path('star-on.png') %>',
-    scoreName: 'book[rate]',
+    score: <%= book.rate %>,
+    readOnly: true,
     half: false,
   });
   </script>  

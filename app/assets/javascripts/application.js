@@ -19,3 +19,5 @@
 //= require_tree .
 //= require chartkick
 //= require Chart.bundle
+window.$ = window.jQuery = require('jquery'); 
+require('packs/raty') 
