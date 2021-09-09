@@ -2,6 +2,7 @@ class BooksController < ApplicationController
   before_action :authenticate_user!
   before_action :ensure_correct_user, only: [:edit, :update, :destroy]
   impressionist :actions=> [:show]
+  helper_method :sort_column, :sort_direction
 
   def show
     @book = Book.find(params[:id])
@@ -13,11 +14,7 @@ class BooksController < ApplicationController
     @book = Book.new
     to  = Time.current.at_end_of_day
     from  = (to - 6.day).at_beginning_of_day
-    @books = Book.includes(:favorited_users).
-      sort {|a,b| 
-        b.favorited_users.includes(:favorites).where(created_at: from...to).size <=> 
-        a.favorited_users.includes(:favorites).where(created_at: from...to).size
-      }
+    @books = Book.order("#{sort_column} desc")
   end
 
   def create
@@ -59,4 +56,19 @@ class BooksController < ApplicationController
       redirect_to books_path
     end
   end
+  
+  def sort_direction
+
+    %w[asc desc].include?(params[:direction]) ? params[:direction] : 'asc'
+
+  end
+
+
+
+  def sort_column
+
+    Book.column_names.include?(params[:sort]) ? params[:sort] : 'id'
+
+  end
+  
 end
